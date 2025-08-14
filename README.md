@@ -24,7 +24,12 @@ A modern, feature-rich URL shortener built with Laravel. Create short, memorable
 
 2. **Start the application**
    ```bash
-   docker-compose up -d
+   # Using the deployment script (recommended)
+   chmod +x deploy.sh
+   ./deploy.sh
+   
+   # Or manually
+   docker-compose up -d --build
    ```
 
 3. **Access the application**
@@ -130,7 +135,7 @@ shortened_urls
 
 ```bash
 # Build and start containers
-docker-compose up -d
+docker-compose up -d --build
 
 # View logs
 docker-compose logs -f
@@ -140,6 +145,9 @@ docker-compose down
 
 # Rebuild containers
 docker-compose up -d --build
+
+# Check container status
+docker-compose ps
 ```
 
 ## 🔧 Configuration
@@ -160,7 +168,49 @@ By default, the application uses SQLite for simplicity. To use other databases:
 2. Update `config/database.php` if needed
 3. Run migrations: `php artisan migrate`
 
-## �� Browser Support
+## 🚨 Troubleshooting
+
+### Docker Build Issues
+
+If you encounter build errors:
+
+1. **Clear Docker cache:**
+   ```bash
+   docker system prune -a
+   ```
+
+2. **Rebuild without cache:**
+   ```bash
+   docker-compose build --no-cache
+   ```
+
+3. **Check logs:**
+   ```bash
+   docker-compose logs
+   ```
+
+### Permission Issues
+
+If you encounter permission errors:
+
+```bash
+# Fix file permissions
+sudo chown -R $USER:$USER .
+chmod -R 755 storage bootstrap/cache
+```
+
+### Database Issues
+
+If the database isn't working:
+
+```bash
+# Recreate the database
+rm database/database.sqlite
+touch database/database.sqlite
+php artisan migrate
+```
+
+## 📱 Browser Support
 
 - Chrome (latest)
 - Firefox (latest)

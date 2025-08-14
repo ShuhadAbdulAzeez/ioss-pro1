@@ -24,14 +24,17 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
+# Copy composer files first for better caching
+COPY composer.json composer.lock ./
+
+# Install dependencies
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
 # Copy existing application directory contents
 COPY . /var/www
 
 # Copy existing application directory permissions
 COPY --chown=www-data:www-data . /var/www
-
-# Install dependencies
-RUN composer install --no-dev --optimize-autoloader
 
 # Create SQLite database
 RUN touch /var/www/database/database.sqlite
@@ -40,11 +43,14 @@ RUN touch /var/www/database/database.sqlite
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/database
 RUN chmod -R 775 /var/www/storage /var/www/bootstrap/cache /var/www/database
 
-# Generate application key
-RUN php artisan key:generate
+# Create .env file if it doesn't exist
+RUN if [ ! -f .env ]; then cp .env.example .env; fi
+
+# Set APP_KEY to a default value for build
+RUN echo "APP_KEY=base64:$(openssl rand -base64 32)" >> .env
 
 # Run migrations
-RUN php artisan migrate --force
+RUN php artisan migrate --force --no-interaction
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
