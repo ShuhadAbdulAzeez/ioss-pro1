@@ -1,0 +1,29 @@
+{
+  "name": "url-shortener-vue-frontend",
+  "version": "1.0.0",
+  "description": "Vue.js frontend for URL Shortener API",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.3.4",
+    "axios": "^1.5.0",
+    "vue-router": "^4.2.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.3.4",
+    "vite": "^4.4.9"
+  },
+  "keywords": [
+    "vue",
+    "url-shortener",
+    "api"
+  ],
+  "author": "",
+  "license": "MIT"
+}
+
